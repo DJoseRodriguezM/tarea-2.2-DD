@@ -6,8 +6,8 @@
 
 ## Autores
 
-David José Rodríguez Menjivar - 20222000953
-Carlos Martín Peña Pérez - 20222001004
+- David José Rodríguez Menjivar - 20222000953
+- Carlos Martín Peña Pérez - 20222001004
 
 ## Recursos necesarios
 
@@ -25,7 +25,7 @@ git clone https://github.com/DJoseRodriguezM/Tarea-2-DD.git
 Ingresar al directorio correcto: desde la carpeta creada ejecute:
 
 ```
-cd server
+cd api-tienda
 ```
 
 Instalar dependencias:
