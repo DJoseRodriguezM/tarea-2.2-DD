@@ -25,7 +25,7 @@ git clone https://github.com/DJoseRodriguezM/Tarea-2-DD.git
 Ingresar al directorio correcto: desde la carpeta creada ejecute:
 
 ```
-cd server
+cd api-tienda
 ```
 
 Instalar dependencias:
