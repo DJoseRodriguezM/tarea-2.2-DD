@@ -6,8 +6,8 @@
 
 ## Autores
 
-David José Rodríguez Menjivar - 20222000953
-Carlos Martín Peña Pérez - 20222001004
+- David José Rodríguez Menjivar - 20222000953
+- Carlos Martín Peña Pérez - 20222001004
 
 ## Recursos necesarios
 
