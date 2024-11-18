@@ -71,8 +71,34 @@ export class ProductsController {
     }
 
     static createProduct(req, res) {
+        const { id } = req.params
+        const consulta = "INSERT INTO productos (id, nombre, descripcion, precio, stock, categoria, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?)"
         
-        
+        try {
+            const { nombre, descripcion, precio, stock, categoria, fecha_creacion } = req.body
+
+            connection.query(consulta, [id, nombre, descripcion, precio, stock, categoria, fecha_creacion], (error, res) => {
+                if (error) {
+                    return res.status(400).json({
+                        error: true,
+                        message: "Ocurrió un error al insertar los datos: " + error
+                    })
+                }
+
+                return res
+                    .header('Content-Type', 'application/json')
+                    .status(200)
+                    .json({
+                        message: "Producto creado con éxito"
+                    })
+
+            })
+        } catch (error) {
+            res.status(400).json({
+                error: true,
+                message: "Ocurrió un error al insertar los datos: " + error
+            })
+        }
     }
 
     static updateProduct(req, res) {
