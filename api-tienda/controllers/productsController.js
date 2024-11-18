@@ -133,6 +133,31 @@ export class ProductsController {
     }
 
     static deleteProduct(req, res) {
-        
+        const { id } = req.params
+        const consulta = "DELETE FROM productos WHERE id = ?"
+
+        try {
+            connection.query(consulta, [id], (error, res) => {
+                if (error) {
+                    return res.status(400).json({
+                        error: true,
+                        message: "Ocurrió un error al eliminar los datos: " + error
+                    })
+                }
+
+                return res
+                    .header('Content-Type', 'application/json')
+                    .status(200)
+                    .json({
+                        message: "Producto eliminado con éxito"
+                    })
+
+            })
+        } catch (error) {
+            res.status(400).json({
+                error: true,
+                message: "Ocurrió un error al eliminar los datos: " + error
+            })
+        }
     }
 }
