@@ -102,7 +102,34 @@ export class ProductsController {
     }
 
     static updateProduct(req, res) {
-        
+        const { id } = req.params
+        const consulta = "UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, stock = ?, categoria = ?, fecha_creacion = ? WHERE id = ?"
+
+        try {
+            const { nombre, descripcion, precio, stock, categoria, fecha_creacion } = req.body
+
+            connection.query(consulta, [nombre, descripcion, precio, stock, categoria, fecha_creacion, id], (error, res) => {
+                if (error) {
+                    return res.status(400).json({
+                        error: true,
+                        message: "Ocurrió un error al actualizar los datos: " + error
+                    })
+                }
+
+                return res
+                    .header('Content-Type', 'application/json')
+                    .status(200)
+                    .json({
+                        message: "Producto actualizado con éxito"
+                    })
+
+            })
+        } catch (error) {
+            res.status(400).json({
+                error: true,
+                message: "Ocurrió un error al actualizar los datos: " + error
+            })
+        }
     }
 
     static deleteProduct(req, res) {
