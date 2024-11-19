@@ -47,7 +47,9 @@ export class ProductsController {
                 }
 
                 if (results && results.length === 0) {
-                    res
+                    return res
+                        .header('Content-Type', 'application/json')
+                        .status(404)
                         .json({
                             message: "Usuario no encontrado"
                         })
@@ -66,18 +68,24 @@ export class ProductsController {
                 error: true,
                 message: "Ocurrió un error al obtener los datos: " + error
             })
-        
+
         }
     }
 
     static createProduct(req, res) {
-        const { id } = req.params
-        const consulta = "INSERT INTO productos (id, nombre, descripcion, precio, stock, categoria, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?)"
-        
-        try {
-            const { nombre, descripcion, precio, stock, categoria, fecha_creacion } = req.body
+        const consulta = "INSERT INTO productos (nombre, descripcion, precio, stock, categoria) VALUES (?, ?, ?, ?, ?)"
 
-            connection.query(consulta, [id, nombre, descripcion, precio, stock, categoria, fecha_creacion], (error, res) => {
+        try {
+            const { nombre, descripcion, precio, stock, categoria } = req.body
+
+            if (!nombre || !precio || !stock) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Los campos nombre, precio y stock son obligatorios"
+                })
+            }
+
+            connection.query(consulta, [nombre, descripcion || null, precio, stock, categoria || null], (error, result) => {
                 if (error) {
                     return res.status(400).json({
                         error: true,
@@ -94,7 +102,7 @@ export class ProductsController {
 
             })
         } catch (error) {
-            res.status(400).json({
+            return res.status(400).json({
                 error: true,
                 message: "Ocurrió un error al insertar los datos: " + error
             })
@@ -103,12 +111,19 @@ export class ProductsController {
 
     static updateProduct(req, res) {
         const { id } = req.params
-        const consulta = "UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, stock = ?, categoria = ?, fecha_creacion = ? WHERE id = ?"
+        const consulta = "UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, stock = ?, categoria = ? WHERE id = ?"
 
         try {
-            const { nombre, descripcion, precio, stock, categoria, fecha_creacion } = req.body
+            const { nombre, descripcion, precio, stock, categoria } = req.body
 
-            connection.query(consulta, [nombre, descripcion, precio, stock, categoria, fecha_creacion, id], (error, res) => {
+            if (!nombre || !precio || !stock) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Los campos nombre, precio, stock son obligatorios"
+                })
+            }
+
+            connection.query(consulta, [nombre, descripcion || null, precio, stock, categoria || null, id], (error, result) => {
                 if (error) {
                     return res.status(400).json({
                         error: true,
@@ -125,7 +140,7 @@ export class ProductsController {
 
             })
         } catch (error) {
-            res.status(400).json({
+            return res.status(400).json({
                 error: true,
                 message: "Ocurrió un error al actualizar los datos: " + error
             })
@@ -137,12 +152,18 @@ export class ProductsController {
         const consulta = "DELETE FROM productos WHERE id = ?"
 
         try {
-            connection.query(consulta, [id], (error, res) => {
+            connection.query(consulta, [id], (error, results) => {
                 if (error) {
                     return res.status(400).json({
                         error: true,
                         message: "Ocurrió un error al eliminar los datos: " + error
                     })
+                }
+                if (results && results.affectedRows === 0) {
+                    return res.status(404)
+                        .json({
+                            message: "Producto no encontrado"
+                        })
                 }
 
                 return res
@@ -154,7 +175,7 @@ export class ProductsController {
 
             })
         } catch (error) {
-            res.status(400).json({
+            return res.status(400).json({
                 error: true,
                 message: "Ocurrió un error al eliminar los datos: " + error
             })
