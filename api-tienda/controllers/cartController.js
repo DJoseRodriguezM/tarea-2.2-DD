@@ -16,7 +16,7 @@ export class CartController {
                 }
 
                 if (results && results.length === 0) {
-                    res
+                    return res
                         .json({
                             message: "Usuario no encontrado"
                         })
